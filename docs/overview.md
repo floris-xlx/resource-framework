@@ -1,93 +1,61 @@
-# Resource framework overview
+## Resource framework overview
 
-This framework helps teams ship database‑backed pages quickly and consistently — think resource lists (tables), drilldowns (detail pages), and schema‑driven forms — without locking you into a specific UI library or routing system.
+Build database‑backed pages quickly with a small set of conventions and shared UI. Define a resource once, and get a list view, a drilldown view, and consistent forms.
 
-## What we’re trying to achieve
+### Key concepts
 
-- Speed: go from idea to functional data screens in hours, not weeks.
-- Consistency: lists, filters, and forms behave the same across the app.
-- Composability: start with sensible defaults, override where it matters.
-- Decoupling: inject your own UI components and app services via adapters.
-- Safety: make server‑friendly requests and predictable updates.
+- resource: a table or view you expose in the UI
+- routes: list and drilldown configuration for each resource
+- columns/renderers: how values display and edit
+- filters: consistent UX that maps to server‑friendly operators
+- hooks: fetching, updates, and cache behavior
+- forms: multi‑step, schema‑driven flows
 
-In short: product teams should focus on business logic and copy; the framework takes care of structure and glue.
+### What you get out‑of‑the‑box
 
-## Core concepts (plain language)
+- Resource lists with search, sorting, actions, and per‑user display preferences
+- Drilldowns with editable fields, sections, and custom components
+- Scoped “create” flows and optional custom dialogs
+- A shared form engine for schema‑driven pages
 
-- **Resource**: a table or view you want to show in the UI (e.g., `invoices`, `customers`, `transactions`).
-- **Routes**: configuration for list and drilldown pages of a resource (paths, columns, search, edit policy).
-- **Columns and renderers**: how fields appear (status badge, currency, dates), and how they can be edited.
-- **Filters**: a consistent way to translate user filters into server‑friendly query params.
-- **Hooks**: small helpers for common client tasks (filters, prefs, user scopes).
-- **Forms**: multi‑step, schema‑driven experiences that persist to your tables and can trigger actions.
+## Quick start
 
-## What you can build with it
+1) Add a route in `packages/resource-framework/registries/resource-routes.ts` (table, id column, optional columns).  
+2) Navigate to `/v2/[resource]` for the list, `/v2/[resource]/[id]` for drilldown.  
+3) Optionally add a drilldown config in `registries/resource-drilldown-routes.ts` for sections, titles, and actions.
 
-- Resource lists with search, sort, bulk actions, and quick filters.
-- Drilldowns with editable fields, related sections, and custom actions.
-- Settings routes for internal tools and admin panels.
-- Schema‑driven forms for onboarding, setup, or operational workflows.
+Minimal route:
 
-## How it’s structured (without code deep‑dives)
+```ts
+export const RESOURCE_ROUTES = {
+  invoices: { table: "invoices", idColumn: "invoice_id" },
+} as const;
+```
 
-### 1) Resource routes
+## Configuration sources
 
-You maintain a registry of resources (like a “directory” of your data screens). For each resource you can define:
+- Static: `RESOURCE_ROUTES` and `RESOURCE_DRILLDOWN_ROUTES` in the registries
+- Database overrides: the components will load a matching row from the `resource_routes` table when a static entry is not present
 
-- page paths (index and drilldown templates)
-- which columns to show and how to render them
-- how search and filtering should work
-- whether editing is allowed and how
+## Caching at a glance
 
-When no static entry exists for a given `resource_name`, the framework can look up dynamic route overrides from a database table (so operations can reconfigure screens without redeploys).
+- Default: caching depends on the user scope `xbp_cache_experimental_v2`
+- Per‑resource override: set `force_no_cache` on a route to always bypass (true) or always allow (false) cache
 
-### 2) Columns (and per‑column links)
+See: caching.md
 
-Columns can be hand‑written or “defined” from a higher‑level spec. You can attach a link template to any column (e.g., `"/v2/customers/{{customer_id}}"`) to let people click through to related pages. Renderers handle common patterns like currency, status, dates, and booleans to keep UI consistent.
+## Forms (shared)
 
-### 3) Categories (Tabbed edit)
-
-You can declare a list of categories on a route (e.g., `["Basic","Address","Business"]`) and assign individual fields to one of those categories. In edit mode, fields automatically group into tabs in that order — similar to how a profile or settings page works.
-
-### 4) Forms (shared module)
-
-There’s a shared, schema‑driven form module for multi‑step flows. It supports a v1 and v2 shape and normalizes them into the same runtime format. The point is to build complex forms (with tables, uploads, radios, pricing choices, etc.) without bespoke page code each time. Schemas can live in your database so non‑developers can iterate safely.
-
-### 5) Hooks and small utilities
-
-- User preferences (stored locally for quick UX wins)
-- Query filters (parse URL filters into a normalized structure)
-- User scopes (fetch allowed permissions and gate UI affordances)
-
-## Opinionated defaults, easy escapes
-
-The framework ships with sensible defaults for columns, sorting, and light edit hints. You can:
-
-- override renderers per column
-- inject your own UI primitives (Button, Badge, Select, etc.)
-- change search/filter behavior
-- add custom actions (like “Create invoice”, “Send email”)
-
-You get productivity without losing control over the experience.
-
-## Why this helps XYLEX Group (and similar apps)
-
-SaaS operations screens can sprawl over time: lists, settings, drilldowns, and forms all grow in different styles. This framework standardizes the building blocks so we can:
-
-- roll out new resources fast (with consistent UX)
-- add features once (e.g., new filter operators) and benefit everywhere
-- evolve our UI library without rewriting business logic
-- keep data screens aligned with server expectations
-
-## A note on adapters (UI/app independence)
-
-Instead of importing UI components directly, the framework asks the host app to provide a small set of primitives (Button, Badge, etc.), router helpers, and optional stores/hooks. That means you can use the design system and navigation you already have, and still benefit from shared data logic and conventions.
+The shared form module lives at `packages/resource-framework/components/form` and is re‑exported by suits‑formations. It renders multi‑step forms from JSON and supports both legacy (v1) and experimental (v2) schema shapes.
 
 ## Where to go next
 
-- Resource routes: how to register resources and define columns
-- Columns and renderers: what’s available and how to customize
-- Forms: schema shapes, defaults, and how to store them in your DB
-- Hooks: filters, prefs, and scopes
+- resource-routes.md — define list pages, search, edit policy, creation
+- drilldown-routes.md — titles, sections, actions, and path templates
+- columns-and-renderers.md — column meta and renderers
+- filter-registry.md — advanced filters and URL mapping
+- components.md — `ResourceTable`, `ResourceDrilldown`, and friends
+- hooks.md — data fetching, updating, and helpers
+- form.md and form-fields.md — schema‑driven forms
 
-This framework aims to make the “boring but important” parts of data pages repeatable and reliable — so product teams can focus on outcomes, not scaffolding.
+All guides live in this folder. Form schemas are stored in `public.resource_forms` in Postgres.

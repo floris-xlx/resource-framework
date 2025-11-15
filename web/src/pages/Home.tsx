@@ -1,5 +1,6 @@
 import * as React from "react";
 import { UI, APP } from "../demo/adapter";
+import { Button } from "@repo/ui";
 
 export function Home() {
   return (
@@ -70,6 +71,17 @@ const columns = defineColumns([
         </div>
       </div>
 
+      <div className="card">
+        <h3>Shadcn UI (shared package)</h3>
+        <p>Shared components via <code>@repo/ui</code> (Tailwind + shadcn styles).</p>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <Button>Button</Button>
+          <Button variant="secondary">Secondary</Button>
+          <Button variant="outline">Outline</Button>
+          <Button variant="ghost">Ghost</Button>
+          <Button variant="link">Link</Button>
+        </div>
+      </div>
       <div className="card">
         <h3>Docs</h3>
         <p>

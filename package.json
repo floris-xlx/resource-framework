@@ -13,6 +13,11 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "web"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -35,7 +40,9 @@
   ],
   "sideEffects": false,
   "scripts": {
+    "dev": "turbo run dev --parallel",
     "build": "rimraf dist && rollup -c && tsc -p tsconfig.build.json",
+    "build:all": "turbo run build",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "prepare": "npm run build",
     "test": "vitest run",
@@ -55,6 +62,7 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/node": "^22.19.1",
+    "turbo": "^2.1.1",
     "rimraf": "^6.0.1",
     "rollup": "^4.24.0",
     "rollup-plugin-dts": "^6.1.1",
