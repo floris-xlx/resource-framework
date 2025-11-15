@@ -9,7 +9,7 @@ export async function insertRow(
   const app = getAppStatic();
   const useUserStore: any = app.stores?.useUserStore;
   const u = typeof useUserStore?.getState === "function" ? useUserStore.getState().user : undefined;
-  const apiUrl = String(app.APP_CONFIG?.api?.suitsbooks || "");
+  const apiUrl = String(app.APP_CONFIG?.api?.xylex || "");
   const resp = await fetch(`${apiUrl}/data/insert`, {
     method: "PUT",
     headers: {

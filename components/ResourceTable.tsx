@@ -142,7 +142,7 @@ export const ResourceTable: React.FC<{ resourceName?: string }> = ({
         const organizationId = String(user!.organization_id);
         const userId = String(user!.user_id);
         async function fetchRouteBy(column: "resource_name" | "table") {
-          const resp = await fetch(`${APP_CONFIG.api.suitsbooks}/fetch/data`, {
+          const resp = await fetch(`${APP_CONFIG.api.xylex}/fetch/data`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -969,7 +969,7 @@ export const ResourceTable: React.FC<{ resourceName?: string }> = ({
       try {
         if (!user?.user_id || !user?.company_id || !user?.organization_id)
           return;
-        const resp = await fetch(`${APP_CONFIG.api.suitsbooks}/fetch/data`, {
+        const resp = await fetch(`${APP_CONFIG.api.xylex}/fetch/data`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -1038,7 +1038,7 @@ export const ResourceTable: React.FC<{ resourceName?: string }> = ({
 
         let idToUse = prefIdRef.current;
         if (idToUse == null) {
-          const check = await fetch(`${APP_CONFIG.api.suitsbooks}/fetch/data`, {
+          const check = await fetch(`${APP_CONFIG.api.xylex}/fetch/data`, {
             method: "POST",
             headers,
             body: JSON.stringify({
@@ -1059,7 +1059,7 @@ export const ResourceTable: React.FC<{ resourceName?: string }> = ({
         }
 
         if (idToUse != null) {
-          await fetch(`${APP_CONFIG.api.suitsbooks}/update/data`, {
+          await fetch(`${APP_CONFIG.api.xylex}/update/data`, {
             method: "PUT",
             headers,
             body: JSON.stringify({
@@ -1072,7 +1072,7 @@ export const ResourceTable: React.FC<{ resourceName?: string }> = ({
           });
           prefIdRef.current = idToUse;
         } else if (initialPrefsFetchOkRef.current === true) {
-          const ins = await fetch(`${APP_CONFIG.api.suitsbooks}/data/insert`, {
+          const ins = await fetch(`${APP_CONFIG.api.xylex}/data/insert`, {
             method: "PUT",
             headers,
             body: JSON.stringify({

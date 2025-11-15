@@ -631,7 +631,7 @@ export function EntityForm({
 					(formData as any)?.country || countryCode || "",
 				).trim();
 
-				await fetch(`${APP_CONFIG.api.suitsbooks}/company/create`, {
+				await fetch(`${APP_CONFIG.api.xylex}/company/create`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
@@ -661,7 +661,7 @@ export function EntityForm({
 			if (adminCompanyId && emailFromForm) {
 				try {
 					// fetch existing customer by email and company_id
-					const resp = await fetch(`${APP_CONFIG.api.suitsbooks}/fetch/data`, {
+					const resp = await fetch(`${APP_CONFIG.api.xylex}/fetch/data`, {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
@@ -798,7 +798,7 @@ export function EntityForm({
 						},
 					} as any;
 
-					await fetch(`${APP_CONFIG.api.suitsbooks}/data/insert`, {
+					await fetch(`${APP_CONFIG.api.xylex}/data/insert`, {
 						method: "PUT",
 						headers: {
 							"Content-Type": "application/json",

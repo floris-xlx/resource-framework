@@ -91,7 +91,7 @@ export const ResourceDrilldown: FC<{
           return;
         setResourceLoading(true);
         async function fetchRouteBy(column: "resource_name" | "table") {
-          const resp = await fetch(`${APP_CONFIG.api.suitsbooks}/fetch/data`, {
+          const resp = await fetch(`${APP_CONFIG.api.xylex}/fetch/data`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

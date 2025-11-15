@@ -47,7 +47,7 @@ export function useUserScopes(options?: { cache_enabled?: boolean }) {
       fetchedRef.current = true;
       setIsLoading(true);
       try {
-        const resp = await fetch(`${String(app.APP_CONFIG?.api?.suitsbooks || "")}/fetch/data`, {
+        const resp = await fetch(`${String(app.APP_CONFIG?.api?.xylex || "")}/fetch/data`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

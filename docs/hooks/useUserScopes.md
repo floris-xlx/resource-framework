@@ -1,6 +1,6 @@
 # useUserScopes
 
-Fetches enabled permission scopes for the current user (via APP_CONFIG.api.suitsbooks).
+Fetches enabled permission scopes for the current user (via APP_CONFIG.api.xylex).
 
 ```ts
 import { useUserScopes } from "resource-framework";

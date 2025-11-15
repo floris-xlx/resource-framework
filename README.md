@@ -40,7 +40,7 @@ import { ResourceFrameworkProvider } from "resource-framework/adapters";
   app={{
     router: { push, back },
     stores: { useUserStore /* etc. */ },
-    APP_CONFIG: { api: { suitsbooks: "https://api.example.com" } },
+    APP_CONFIG: { api: { xylex: "https://api.example.com" } },
     useNotification, // function or { notify }
     useApiClient,    // optional
   }}
@@ -117,7 +117,7 @@ type App = {
   stores?: { useUserStore?: Function; [k: string]: any };
   useNotification?: (() => { notify?: (m: any) => void }) | ((m: any) => void);
   useApiClient?: () => { get: Function; post: Function };
-  APP_CONFIG?: Record<string, any>; // e.g., { api: { suitsbooks: "…" }, telemetry: { … } }
+  APP_CONFIG?: Record<string, any>; // e.g., { api: { xylex: "…" }, telemetry: { … } }
 };
 ```
 
@@ -223,7 +223,7 @@ type App = {
   useNotification?: (() => { notify?: (m: any) => void }) | ((m: any) => void);
   useApiClient?: () => { get: Function; post: Function };
   APP_CONFIG?: {
-    api?: { suitsbooks?: string };
+    api?: { xylex?: string };
     telemetry?: { xbp_telemetry?: string | number | boolean };
     [k: string]: any;
   };
@@ -427,7 +427,7 @@ Uploads & country UX
 - Template helpers (e.g., `utils/templates`) to replace `{{token}}` paths in `href` and masked labels.
 
 - `insertRow(table, body)`:
-  - Thin convenience wrapper around `fetch` for inserts against your API (`/data/insert`), using headers from the adapter’s `useUserStore` and `APP_CONFIG.api.suitsbooks`.
+  - Thin convenience wrapper around `fetch` for inserts against your API (`/data/insert`), using headers from the adapter’s `useUserStore` and `APP_CONFIG.api.xylex`.
 
 ### Cache state registry (host-app pattern)
 
@@ -461,7 +461,7 @@ const APP = {
   router: { push: (href) => navigate(href), back: () => history.back() },
   stores: { useUserStore: Stores.useUserStore },
   useNotification: () => ({ notify: (m: any) => toast(m.message) }),
-  APP_CONFIG: { api: { suitsbooks: process.env.NEXT_PUBLIC_API_URL } },
+  APP_CONFIG: { api: { xylex: process.env.NEXT_PUBLIC_API_URL } },
 };
 
 export function Provider({ children }: { children: React.ReactNode }) {
