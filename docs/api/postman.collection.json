@@ -1,0 +1,60 @@
+{
+  "info": {
+    "name": "Resource Framework (used endpoints)",
+    "_postman_id": "b2b0f7f4-0a1a-4c8f-9f66-6d0c2a4a0abc",
+    "description": "Collection describing endpoints the framework uses",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Fetch Data",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "X-Company-Id", "value": "{{company_id}}" },
+          { "key": "X-Organization-Id", "value": "{{organization_id}}" },
+          { "key": "X-User-Id", "value": "{{user_id}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"table_name\": \"user_permission_scopes\",\n  \"conditions\": [\n    {\"eq_column\": \"user_id\", \"eq_value\": \"{{user_id}}\"},\n    {\"eq_column\": \"enabled\", \"eq_value\": true}\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/fetch/data",
+          "host": ["{{base_url}}"],
+          "path": ["fetch", "data"]
+        }
+      }
+    },
+    {
+      "name": "Insert Row",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "X-Company-Id", "value": "{{company_id}}" },
+          { "key": "X-Organization-Id", "value": "{{organization_id}}" },
+          { "key": "X-User-Id", "value": "{{user_id}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"table_name\": \"some_table\",\n  \"insert_body\": { \"key\": \"value\" }\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/data/insert",
+          "host": ["{{base_url}}"],
+          "path": ["data", "insert"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "https://api.example.com" },
+    { "key": "company_id", "value": "" },
+    { "key": "organization_id", "value": "" },
+    { "key": "user_id", "value": "" }
+  ]
+}
+
+

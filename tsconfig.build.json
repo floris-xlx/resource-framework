@@ -1,0 +1,29 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": ".",
+    "declaration": true,
+    "emitDeclarationOnly": true
+  },
+  "include": [
+    "index.ts",
+    "adapters/**/*.ts",
+    "adapters/**/*.tsx",
+    "constructors/**/*.ts",
+    "constructors/**/*.tsx",
+    "registries/filter-registry.tsx",
+    "hooks/useUserScopes.ts",
+    "hooks/useUserPreferences.ts",
+    "hooks/useQueryFilters.ts",
+    "hooks/useResourceColumns.ts",
+    "utils/**/*.ts",
+    "resource-types.ts",
+    "components/index.ts",
+    "components/cells/**/*.ts",
+    "components/cells/**/*.tsx"
+  ],
+  "exclude": ["dist", "node_modules"]
+}
+
+

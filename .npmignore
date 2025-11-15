@@ -1,0 +1,9 @@
+src
+node_modules
+*.log
+*.map
+tsconfig*.json
+rollup.config.mjs
+.DS_Store
+
+

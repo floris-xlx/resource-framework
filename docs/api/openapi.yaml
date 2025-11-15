@@ -1,0 +1,82 @@
+openapi: 3.0.3
+info:
+  title: Resource Framework Backend Endpoints (used)
+  version: 0.1.0
+  description: Minimal spec of endpoints the framework calls.
+servers:
+  - url: https://api.example.com
+paths:
+  /fetch/data:
+    post:
+      summary: Fetch table rows
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                table_name:
+                  type: string
+                conditions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      eq_column: { type: string }
+                      eq_value: {}
+      parameters:
+        - in: header
+          name: X-Company-Id
+          schema: { type: string }
+        - in: header
+          name: X-Organization-Id
+          schema: { type: string }
+        - in: header
+          name: X-User-Id
+          schema: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { type: object }
+  /data/insert:
+    put:
+      summary: Insert row into table
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                table_name: { type: string }
+                insert_body: { type: object, additionalProperties: true }
+      parameters:
+        - in: header
+          name: X-Company-Id
+          schema: { type: string }
+        - in: header
+          name: X-Organization-Id
+          schema: { type: string }
+        - in: header
+          name: X-User-Id
+          schema: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  data: {}
+
+
