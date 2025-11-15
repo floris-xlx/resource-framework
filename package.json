@@ -5,9 +5,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/suitsbooks/resource-framework.git"
+    "url": "git+https://github.com/XYLEX-Group/resource-framework.git"
   },
-  "author": "SuitsBooks",
+  "homepage": "https://xylex.group",
+  "author": "XYLEX Group",
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",

@@ -170,7 +170,7 @@ Issues and PRs welcome. Please include unit tests for changes in headless logic,
 
 ## License
 
-MIT © SuitsBooks
+MIT © XYLEX Group — <https://xylex.group>
 
 ---
 
@@ -449,7 +449,7 @@ Benefits: keep server-hydrated UI state in sync via a single, audited mapping.
 
 - Memoize column definitions (`useResourceColumns`) and avoid re-creating functions in cell renderers unnecessarily.
 
-### Example: wiring in Suitsbooks
+### Example: wiring in XYLEX Group
 
 ```ts
 // app/adapters.tsx

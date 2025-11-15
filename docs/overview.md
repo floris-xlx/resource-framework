@@ -70,7 +70,7 @@ The framework ships with sensible defaults for columns, sorting, and light edit 
 
 You get productivity without losing control over the experience.
 
-## Why this helps Suitsbooks (and similar apps)
+## Why this helps XYLEX Group (and similar apps)
 
 SaaS operations screens can sprawl over time: lists, settings, drilldowns, and forms all grow in different styles. This framework standardizes the building blocks so we can:
 
@@ -91,5 +91,3 @@ Instead of importing UI components directly, the framework asks the host app to 
 - Hooks: filters, prefs, and scopes
 
 This framework aims to make the “boring but important” parts of data pages repeatable and reliable — so product teams can focus on outcomes, not scaffolding.
-
-
