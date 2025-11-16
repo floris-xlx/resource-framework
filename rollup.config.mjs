@@ -29,7 +29,6 @@ const configs = [
       }
     ],
     external: (id) => {
-      // Treat peer deps and react libs as external
       return (
         id.startsWith("react") ||
         id.startsWith("@tanstack/react-table") ||
