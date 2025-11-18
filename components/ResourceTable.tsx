@@ -223,9 +223,16 @@ export const ResourceTable: React.FC<{ resourceName?: string }> = ({
           create: (() => {
             const req = toArray(row?.new_resource_mandatory_columns);
             const opt = toArray(row?.new_resource_optional_columns);
-            if ((req && req.length) || (opt && opt.length)) {
+            const createScope = toArray(row?.create_scope);
+            const showButtonScope = toArray(row?.create_show_button_scope);
+            const hasReqOpt = (req && req.length) || (opt && opt.length);
+            const hasScopes =
+              (createScope && createScope.length) ||
+              (showButtonScope && showButtonScope.length);
+            if (hasReqOpt || hasScopes) {
               return {
-                scope: [],
+                scope: createScope,
+                showButtonScope,
                 required: req,
                 optional: opt,
               };
