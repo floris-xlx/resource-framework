@@ -1,3 +1,15 @@
+### Scoped creation (feature flags / scopes)
+
+Resource creation can be gated by scopes:
+
+- In DB (`public.resource_routes`):
+  - `create_scope` (jsonb): array of scopes required to submit creation
+  - `create_show_button_scope` (jsonb): array of scopes required to show the button
+- In code (`ResourceTable`):
+  - Button visibility is controlled by `create.showButtonScope`
+  - Submit is blocked without `create.scope`
+
+When using DB-driven routes, `new_resource_mandatory_columns` and `new_resource_optional_columns` drive the Create dialog fields.
 ## Scoped creation and required initial values
 
 This guide explains how to:

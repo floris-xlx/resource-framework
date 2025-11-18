@@ -302,7 +302,9 @@ export const ResourceTable: React.FC<{ resourceName?: string }> = ({
           if (
             rawKey === "sortby" ||
             rawKey === "sortdir" ||
-            rawKey === "rows_per_page"
+            rawKey === "rows_per_page" ||
+            rawKey === "per_page" ||
+            rawKey === "page"
           )
             continue;
 
@@ -459,6 +461,19 @@ export const ResourceTable: React.FC<{ resourceName?: string }> = ({
             key: k,
             header: k.replace(/_/g, " "),
           })) as any);
+    // Remove avatar column from visible specs if configured
+    try {
+      const avatarKey = (resource as any)?.avatar_column;
+      if (avatarKey) {
+        for (let i = finalSpecs.length - 1; i >= 0; i -= 1) {
+          const s = finalSpecs[i] as any;
+          const key = typeof s === "string" ? s : s?.key;
+          if (key === avatarKey) {
+            finalSpecs.splice(i, 1);
+          }
+        }
+      }
+    } catch {}
     const built = buildColumnsFromRegistry<any>(finalSpecs);
 
     // use ScopeCell for the scope column and PriorityIcon for priority
@@ -591,6 +606,8 @@ export const ResourceTable: React.FC<{ resourceName?: string }> = ({
       enableHiding: false,
       meta: {
         className: "sticky right-0",
+        // explicitly mark actions as non-filterable so parsers/fields skip it
+        filterable: false,
       },
     } as any);
 
@@ -604,6 +621,8 @@ export const ResourceTable: React.FC<{ resourceName?: string }> = ({
         .map((c: any) => {
           const key = (c?.accessorKey as string) ?? (c?.id as string);
           if (!key) return null;
+          // blacklist: never expose actions in filter fields
+          if (key === "actions") return null;
           const meta = (c?.meta as any) || {};
           const headerText = meta?.headerText;
           const header = c?.header;
@@ -935,6 +954,17 @@ export const ResourceTable: React.FC<{ resourceName?: string }> = ({
         ];
       });
 
+    // Pick default rows per page from URL (?per_page or ?rows_per_page)
+    let defaultRowsPerPage = "25";
+    try {
+      const qPer = searchParams?.get("per_page");
+      const qRows = searchParams?.get("rows_per_page");
+      defaultRowsPerPage =
+        (qPer && String(qPer)) ||
+        (qRows && String(qRows)) ||
+        defaultRowsPerPage;
+    } catch {}
+
     return [
       ...cols,
       ...(sortOptions?.length
@@ -958,10 +988,10 @@ export const ResourceTable: React.FC<{ resourceName?: string }> = ({
           { label: "100 rows", value: "100" },
           { label: "1000 rows", value: "1000" },
         ],
-        defaultValue: "25",
+        defaultValue: defaultRowsPerPage,
       },
     ];
-  }, [columns]);
+  }, [columns, searchParams?.toString()]);
 
   useEffect(() => {
     let aborted = false;
@@ -1215,7 +1245,7 @@ export const ResourceTable: React.FC<{ resourceName?: string }> = ({
         columns={columns as any}
         data={filteredData}
         title={`${(resource as any)?.page_label || resource_name}`}
-        disableFullscreenView={false}
+        disableFullscreenView={true}
         onAddItem={(() => {
           if (!(resource as any)?.enableNewResourceCreation) return undefined;
           if (addResourceProps.onAddResourceButton) return undefined;
@@ -1260,28 +1290,43 @@ export const ResourceTable: React.FC<{ resourceName?: string }> = ({
           try {
             const id = (row as any)[(resource as any)?.idColumn || "id"];
             const custom = (resource as any)?.drilldownHref;
+            // Preserve pagination params (page, per_page) if present
+            const preserved = (() => {
+              try {
+                const qp = new URLSearchParams(searchParams?.toString());
+                const kept = new URLSearchParams();
+                const page = qp.get("page");
+                const perPage = qp.get("per_page") || qp.get("rows_per_page");
+                if (page) kept.set("page", page);
+                if (perPage) kept.set("per_page", perPage);
+                const s = kept.toString();
+                return s ? `?${s}` : "";
+              } catch {
+                return "";
+              }
+            })();
             if (typeof custom === "function") {
               const href = custom(row);
-              if (href && typeof href === "string") return href;
+              if (href && typeof href === "string") return `${href}${preserved}`;
             } else if (typeof custom === "string" && custom.trim() !== "") {
               const href = custom.replace(
                 /\{\{(.*?)\}\}/g,
                 (_: any, key: string) =>
                   String((row as any)?.[key.trim()] ?? ""),
               );
-              if (href) return href;
+              if (href) return `${href}${preserved}`;
             }
             const prefix = (resource as any)?.drilldownRoutePrefix;
             if (typeof prefix === "string" && prefix.trim() !== "") {
               const base = prefix.startsWith("/") ? prefix : `/${prefix}`;
-              return `${base}/${id}`;
+              return `${base}/${id}${preserved}`;
             }
             const joinRoute = (...parts: string[]) =>
               `/${parts.join("/")}`.replace(/\/+/g, "/");
             const seg = String(
               (resource as any)?.path || resource_name || "",
             ).replace(/^\/+/, "");
-            return joinRoute("v2", seg, String(id));
+            return `${joinRoute("v2", seg, String(id))}${preserved}`;
           } catch {
             const id = (row as any)[(resource as any)?.idColumn || "id"];
             const joinRoute = (...parts: string[]) =>
